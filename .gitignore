@@ -10,3 +10,4 @@ test_auto.cpp
 Clipboard.pro.user
 .qmake.stash
 passman
+moc_predefs.h
