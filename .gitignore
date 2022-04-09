@@ -8,3 +8,5 @@ postgres.txt
 clipboard.cpp
 test_auto.cpp
 Clipboard.pro.user
+.qmake.stash
+passman
