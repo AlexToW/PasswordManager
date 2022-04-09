@@ -44,29 +44,6 @@ DataBase::DataBase(const std::string& db_name) {
         cerr2 << e.what() << "\n"; cerr2.flush();
         exit(1);
     }
-    /*
-    // also we have to create table 'all_passwords'
-            // connect to DB db_name
-            pqxx::work ww(C);
-            ww.exec("\\c " + db_name + ";");
-            ww.commit();
-
-            pqxx::work w2(C);
-            // create table request string
-            std::stringstream ss_table;
-            ss_table << "CREATE TABLE IF NOT EXISTS all_passwords ( " << "password varchar (500) NOT NULL UNIQUE, "
-            << "email varchar (100) NOT NULL, " << "user_name varchar (100) NOT NULL, "
-            << "url varchar (100) NOT NULL, " << "app_name varchar (100) NOT NULL);";
-            w2.exec(ss_table.str());
-            w2.commit();
-            // create autorisation table
-            std::stringstream ss_table2;
-            ss_table2 << "CREATE TABLE autorisation (login varchar (300),\
-                     password varchar (300));";
-            pqxx::work w3(C);
-            w3.exec(ss_table2.str());
-            w3.commit();
-    */
     if(!exist) {
         try {
             pqxx::connection C("user = postgres dbname = passman");
