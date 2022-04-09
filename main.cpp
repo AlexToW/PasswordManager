@@ -40,18 +40,8 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    /*
-    const QString pass = "secret_key228sss";
-
-    QClipboard *clipboard = a.clipboard();
-    clipboard->setText(pass);
-    */
-    if(argc < 5) {
-        throw std::runtime_error("To few command line arguments: expected 5");
-        return 1;
-    }
-
-    DataBase db(argv[1], argv[2], argv[3], argv[4]);
+    DataBase db("passman");
+    std::cout << "Connection" << std::endl;
     PassMan passman(db);
 
     for(int i = 0; i < 3; i++) {

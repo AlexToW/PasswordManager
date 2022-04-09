@@ -23,7 +23,6 @@ LIBS += -L/usr/include/crypto++ -lcryptopp
 
 SOURCES += \
     autorisation.cpp \
-    cionout.cpp \
     database_manager.cpp \
     encryption.cpp \
     hash.cpp \
@@ -34,7 +33,6 @@ SOURCES += \
 
 HEADERS += \
     autorisation.h \
-    cionout.h \
     database_manager.h \
     encryption.h \
     hash.h \

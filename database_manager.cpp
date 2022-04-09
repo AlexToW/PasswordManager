@@ -9,11 +9,101 @@
     QTextStream cerr2(stderr);
 #endif
 
-    DataBase::DataBase(){}
+DataBase::DataBase(){}
+
+DataBase::DataBase(const std::string& db_name) {
+    _user_name = "postgres";
+    _table_name = "all_passwords";
+    _db_name = "template1";
+    // database 'PassMan' existence check
+    bool exist = true;
+    std::string req = "SELECT * FROM pg_database WHERE datname = '" + db_name + "';";
+    std::string default_conn_info = "user = postgres dbname = template1";
+    try {
+        pqxx::connection C(default_conn_info);
+        if(!C.is_open()) {
+            cerr2 << "Failed DB connection with " << QString::fromStdString(default_conn_info) << "\n"; cerr2.flush();
+            exit(1);
+        }
+        pqxx::work w(C);
+        pqxx::result res = w.exec(req);
+
+        if(res.size() == 0) {
+            exist = false;
+        }
+        w.commit();
+        std::cerr << "Exists: " << exist << std::endl;
+        // if DB 'PassMan' doesn't exist, we have to create it
+        if(!exist) {
+            pqxx::nontransaction N(C);
+            N.exec("CREATE DATABASE " + db_name + ";");
+            N.commit();
+        }
+        C.disconnect();
+    } catch(const std::exception& e) {
+        cerr2 << e.what() << "\n"; cerr2.flush();
+        exit(1);
+    }
+    /*
+    // also we have to create table 'all_passwords'
+            // connect to DB db_name
+            pqxx::work ww(C);
+            ww.exec("\\c " + db_name + ";");
+            ww.commit();
+
+            pqxx::work w2(C);
+            // create table request string
+            std::stringstream ss_table;
+            ss_table << "CREATE TABLE IF NOT EXISTS all_passwords ( " << "password varchar (500) NOT NULL UNIQUE, "
+            << "email varchar (100) NOT NULL, " << "user_name varchar (100) NOT NULL, "
+            << "url varchar (100) NOT NULL, " << "app_name varchar (100) NOT NULL);";
+            w2.exec(ss_table.str());
+            w2.commit();
+            // create autorisation table
+            std::stringstream ss_table2;
+            ss_table2 << "CREATE TABLE autorisation (login varchar (300),\
+                     password varchar (300));";
+            pqxx::work w3(C);
+            w3.exec(ss_table2.str());
+            w3.commit();
+    */
+    if(!exist) {
+        try {
+            pqxx::connection C("user = postgres dbname = passman");
+            if(!C.is_open()) {
+                cerr2 << "Failed DB connection!\n"; cerr2.flush();
+                exit(1);
+            }
+            pqxx::work w2(C);
+            // create table request string
+            std::stringstream ss_table;
+            ss_table << "CREATE TABLE IF NOT EXISTS all_passwords ( " << "password varchar (500) NOT NULL UNIQUE, "
+            << "email varchar (100) NOT NULL, " << "user_name varchar (100) NOT NULL, "
+            << "url varchar (100) NOT NULL, " << "app_name varchar (100) NOT NULL);";
+            w2.exec(ss_table.str());
+            w2.commit();
+            // create autorisation table
+            std::stringstream ss_table2;
+            ss_table2 << "CREATE TABLE autorisation (login varchar (300),\
+                    password varchar (300), salt varchar(100));";
+            pqxx::work w3(C);
+            w3.exec(ss_table2.str());
+            w3.commit();
+            C.disconnect();
+        }  catch(const std::exception& e) {
+            cerr2 << e.what() << "\n"; cerr2.flush();
+            exit(1);
+        }
+    }
+    _db_name = db_name;
+}
+
+
+
+
 DataBase::DataBase(const std::string& db_name, const std::string& table_name,
-    const std::string user_name, const std::string password) {
+    const std::string user_name) {
         //db_name, table_name, user_name (database), password (database)
-    _password = password;
     _user_name = user_name;
     _db_name = db_name;
     _table_name = table_name;
@@ -143,7 +233,7 @@ bool DataBase::InsertPasswordItem(PasswordItem& item) {
 
 std::string DataBase::GetDBconnectionInfo() {
     std::stringstream ss;
-    ss << "user = " << _user_name << " password = " << _password << " dbname = " << _db_name;
+    ss << "user = " << _user_name << " dbname = " << _db_name;
     return ss.str();
 }
 

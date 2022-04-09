@@ -53,7 +53,6 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = autorisation.cpp \
-		cionout.cpp \
 		database_manager.cpp \
 		encryption.cpp \
 		hash.cpp \
@@ -62,7 +61,6 @@ SOURCES       = autorisation.cpp \
 		password_item.cpp \
 		password_manager.cpp moc_mainwindow.cpp
 OBJECTS       = autorisation.o \
-		cionout.o \
 		database_manager.o \
 		encryption.o \
 		hash.o \
@@ -147,14 +145,12 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		passman.pro autorisation.h \
-		cionout.h \
 		database_manager.h \
 		encryption.h \
 		hash.h \
 		mainwindow.h \
 		password_item.h \
 		password_manager.h autorisation.cpp \
-		cionout.cpp \
 		database_manager.cpp \
 		encryption.cpp \
 		hash.cpp \
@@ -341,8 +337,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents autorisation.h cionout.h database_manager.h encryption.h hash.h mainwindow.h password_item.h password_manager.h $(DISTDIR)/
-	$(COPY_FILE) --parents autorisation.cpp cionout.cpp database_manager.cpp encryption.cpp hash.cpp main.cpp mainwindow.cpp password_item.cpp password_manager.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents autorisation.h database_manager.h encryption.h hash.h mainwindow.h password_item.h password_manager.h $(DISTDIR)/
+	$(COPY_FILE) --parents autorisation.cpp database_manager.cpp encryption.cpp hash.cpp main.cpp mainwindow.cpp password_item.cpp password_manager.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents mainwindow.ui $(DISTDIR)/
 
 
@@ -410,9 +406,6 @@ autorisation.o: autorisation.cpp autorisation.h \
 		encryption.h \
 		hash.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o autorisation.o autorisation.cpp
-
-cionout.o: cionout.cpp cionout.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o cionout.o cionout.cpp
 
 database_manager.o: database_manager.cpp database_manager.h \
 		password_item.h \
