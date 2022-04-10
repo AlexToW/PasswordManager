@@ -1,8 +1,6 @@
 #pragma once
-
 #include <string>
 #include <map>
-//#include "cionout.h"
 
 enum class PassField {
     PASSWORD,
@@ -12,11 +10,10 @@ enum class PassField {
     APP_NAME
 };
 
-
 class PasswordItem {
 public:
-    PasswordItem(std::string password, std::string email, std::string user_name,
-        std::string url, std::string app_name);
+    PasswordItem(std::string& password, std::string& email, std::string& user_name,
+                 std::string& url, std::string& app_name);
     std::map<PassField, std::string> GetPasswordItem();
 
 private:

@@ -1,13 +1,4 @@
-*.exe
-.vscode
-test_db.cpp
-test_db2.cpp
-postgres.txt
-.vscode/settings.json
-*.o
-clipboard.cpp
-test_auto.cpp
-Clipboard.pro.user
+cmake-build-debug/
 .qmake.stash
-passman
-moc_predefs.h
+*.o
+*.exe

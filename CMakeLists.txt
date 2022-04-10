@@ -1,0 +1,13 @@
+cmake_minimum_required(VERSION 3.21)
+project(PassMan)
+
+set(CMAKE_CXX_STANDARD 20)
+set(INC_DIR /usr/include/pqxx)
+set(INC_DIR /usr/include/crypto++)
+set(LINK_DIR /usr/share/doc/libpqxx-dev)
+set(LINK_DIR /usr/share/doc/libcrypto++-dev)
+include_directories(${INC_DIR})
+link_directories(${LINK_DIR})
+link_libraries(pqxx)
+link_libraries(crypto++)
+add_executable(PassMan main.cpp password_item.h password_item.cpp hash.h hash.cpp database.h database.cpp passman.h passman.cpp encryption.h encryption.cpp)
