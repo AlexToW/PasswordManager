@@ -6,7 +6,7 @@ bool DataBase::InsertRegister(std::string& login, std::string& master_pass_hash,
     ss << "INSERT INTO authorisation VALUES ('" << login << "', '" << master_pass_hash << "', '"
        << salt << "');";
     try {
-        pqxx::connection C("user = postgres dbname = passman");
+        pqxx::connection C("user = postgres password = " + password_db + " dbname = passman");
         if(!C.is_open()) {
             std::cout << "Failed connection to database!" << std::endl;
             return false;
@@ -23,7 +23,7 @@ bool DataBase::InsertRegister(std::string& login, std::string& master_pass_hash,
 }
 
 bool DataBase::InsertPassword(PasswordItem &p) {
-    std::string conn_info = "user = postgres dbname = passman";
+    std::string conn_info = "user = postgres password = " + password_db + " dbname = passman";
     auto pass = p.GetPasswordItem();
     std::stringstream ss_req;
     ss_req << "INSERT INTO all_passwords (password, email, user_name, url, app_name) VALUES ("
@@ -60,7 +60,7 @@ DataBase::SelectEmailAll(const std::string& user, const std::string& email) {
     std::vector<std::pair<std::string, std::string>> result_v;
     // connection to database
     try {
-        pqxx::connection C("user = postgres dbname = passman");
+        pqxx::connection C("user = postgres password = " + password_db + " dbname = passman");
         pqxx::work w(C);
         pqxx::result res = w.exec(ss_req.str());
         w.commit();
@@ -94,7 +94,7 @@ std::pair<bool, std::string> DataBase::FindPass(const std::string& user, const s
     std::pair<bool, std::string> res_p; // result to return
     //connection to database
     try {
-        pqxx::connection C("user = postgres dbname = passman");
+        pqxx::connection C("user = postgres password = " + password_db + " dbname = passman");
         pqxx::work w(C);
         pqxx::result res = w.exec(ss_req.str());
         w.commit();
@@ -117,7 +117,7 @@ std::pair<bool, std::string> DataBase::FindPass(const std::string& user, const s
 
 bool DataBase::CreateTables() {
     /* returns True, if tables authorisation and all_passwords were successfully created */
-    std::string conn_info = "user = postgres dbname = passman";
+    std::string conn_info = "user = postgres password = " + password_db + " dbname = passman";
     std::string q1 = "create table if not exists authorisation (login varchar (300) NOT NULL UNIQUE, "
                      "password varchar (300) NOT NULL, salt varchar(100) NOT NULL UNIQUE);";
     std::string q2 = "CREATE TABLE IF NOT EXISTS all_passwords (password varchar (500) NOT NULL, "
@@ -142,7 +142,7 @@ bool DataBase::CreateTables() {
 }
 
 bool DataBase::CreateDB() {
-    std::string conn_info = "user = postgres dbname = template1";
+    std::string conn_info = "user = postgres password = " + password_db + " dbname = template1";
     std::string q = "create database passman;";
     try {
         pqxx::connection C(conn_info);
@@ -161,7 +161,8 @@ bool DataBase::CreateDB() {
     return true;
 }
 
-DataBase::DataBase() {
+DataBase::DataBase(std::string const & pass_db) {
+    password_db = pass_db;
     db_name = "template1";
     user_name = "postgres";
     if(!ExistDB()) {

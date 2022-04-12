@@ -16,7 +16,7 @@ enum class AUTHORISATION_RES {
 
 class DataBase {
 public:
-    DataBase();
+    DataBase(std::string const & pass_db);
     bool ExistDB();
     bool ExistTables();
     std::string GetConnInfo();
@@ -31,4 +31,5 @@ public:
 private:
     std::string db_name;
     std::string user_name;
+    std::string password_db;
 };
